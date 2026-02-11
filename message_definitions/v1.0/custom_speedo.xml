@@ -1,0 +1,66 @@
+<?xml version="1.0"?>
+<mavlink>
+    <!-- Include development dialect to get all standard messages -->
+    <include>development.xml</include>
+
+    <messages>
+        <!-- Custom Speedo Ping Message -->
+        <message id="13000" name="CUSTOM_PING">
+            <description>Custom ping message with sequence number and timestamp</description>
+            <field type="uint64_t" name="timestamp_usec">Timestamp in microseconds since system start</field>
+            <field type="uint32_t" name="sequence">Ping sequence number</field>
+            <field type="float" name="data1">Custom data field 1</field>
+            <field type="float" name="data2">Custom data field 2</field>
+            <field type="uint8_t" name="status">Status flag (0=inactive, 1=active)</field>
+        </message>
+
+        <!-- Custom Speedo Pong Message (Response to PING) -->
+        <message id="13001" name="CUSTOM_PONG">
+            <description>Custom pong reply message echoing ping data</description>
+            <field type="uint64_t" name="timestamp_usec">Timestamp in microseconds when pong was sent</field>
+            <field type="uint32_t" name="sequence">Echo of ping sequence number</field>
+            <field type="float" name="response_data1">Response data field 1</field>
+            <field type="float" name="response_data2">Response data field 2</field>
+            <field type="uint8_t" name="response_status">Response status (0=failed, 1=success)</field>
+        </message>
+
+        <!-- Transform between coordinate frames (optimized with frame ID indices) -->
+        <message id="13002" name="TF_TRANSFORM">
+            <description>Transform between coordinate frames using frame ID indices for efficiency</description>
+            <field type="uint64_t" name="timestamp_usec">Timestamp in microseconds since system start</field>
+            <field type="uint8_t" name="frame_id">Parent frame ID (0=local_origin, 1=px4_body, 2=camera_link, 3=lidar_link, 4=gimbal_link, 5=base_link, 6=odom, 7=map)</field>
+            <field type="uint8_t" name="child_frame_id">Child frame ID (see frame_id for mapping)</field>
+            <field type="float" name="translation_x">Translation X in meters</field>
+            <field type="float" name="translation_y">Translation Y in meters</field>
+            <field type="float" name="translation_z">Translation Z in meters</field>
+            <field type="float" name="rotation_x">Quaternion X component</field>
+            <field type="float" name="rotation_y">Quaternion Y component</field>
+            <field type="float" name="rotation_z">Quaternion Z component</field>
+            <field type="float" name="rotation_w">Quaternion W component</field>
+        </message>
+
+        <!-- Trajectory header - sent once per trajectory -->
+        <message id="13003" name="TRAJECTORY_HEADER">
+            <description>Header for a trajectory containing metadata</description>
+            <field type="uint64_t" name="timestamp_usec">Timestamp in microseconds since system start</field>
+            <field type="uint32_t" name="trajectory_id">Unique trajectory ID</field>
+            <field type="uint16_t" name="total_points">Total number of waypoints in trajectory</field>
+            <field type="float" name="total_duration">Total duration of trajectory in seconds</field>
+            <field type="uint8_t" name="frame_id">Coordinate frame (0=local_origin, 1=global, 2=body)</field>
+        </message>
+
+        <!-- Trajectory waypoint - sent multiple times per trajectory -->
+        <message id="13004" name="TRAJECTORY_WAYPOINT">
+            <description>Single waypoint in a trajectory (matches nav_msgs/Path)</description>
+            <field type="uint32_t" name="trajectory_id">References trajectory header ID</field>
+            <field type="uint16_t" name="seq">Waypoint sequence number 0..N-1</field>
+            <field type="float" name="pos_x">Position X in meters</field>
+            <field type="float" name="pos_y">Position Y in meters</field>
+            <field type="float" name="pos_z">Position Z in meters</field>
+            <field type="float" name="quat_w">Quaternion W component</field>
+            <field type="float" name="quat_x">Quaternion X component</field>
+            <field type="float" name="quat_y">Quaternion Y component</field>
+            <field type="float" name="quat_z">Quaternion Z component</field>
+        </message>
+    </messages>
+</mavlink>
